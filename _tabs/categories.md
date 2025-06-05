@@ -1,5 +1,5 @@
 ---
-layout: categories
-icon: fas fa-stream
-order: 1
+layout: tags
+icon: fas fa-tags
+order: 2
 ---
