@@ -150,7 +150,9 @@ pwa:
     deny_paths:
       # - "/example"  # URLs match `<SITE_URL>/example/*` will not be cached by the PWA
 
-paginate: 10
+# Articles are listed on the dedicated /articles/ page (see _layouts/articles.html)
+# rather than paginated on the site root, so `paginate` is intentionally unset here —
+# jekyll-paginate only ever applies to the root index.html.
 
 # The base URL of your site
 baseurl: "/blue-octopus"

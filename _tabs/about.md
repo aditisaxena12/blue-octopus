@@ -1,9 +1,14 @@
 ---
-# the default layout is 'page'
 title: About Me
-icon: fas fa-light fa-image-portrait 
+layout: page
+icon: fas fa-light fa-image-portrait
 order: 5
+description: Who I am and what I work on.
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+I'm Aditi Saxena, a Research Scholar and Software Engineer. I work at the
+intersection of research and engineering, building software while exploring
+open questions in my field, and I write here to document what I'm learning
+and thinking about along the way.
+
+<!-- Replace the paragraph above with your own — this is a starting draft. -->

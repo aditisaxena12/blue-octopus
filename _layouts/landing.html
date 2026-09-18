@@ -1,0 +1,35 @@
+---
+layout: default
+# Hub-style home page: hero + animated links to the rest of the site.
+---
+
+{% include lang.html %}
+
+<div id="landing">
+  <section class="landing-hero">
+    <h1 class="landing-hero-title">
+      Hi, I'm {{ site.social.name | default: site.title }} <span class="wave">👋</span>
+    </h1>
+    <p class="landing-hero-tagline">{{ site.tagline }}</p>
+  </section>
+
+  <div class="landing-grid">
+    {% assign sorted_tabs = site.tabs | sort: 'order' %}
+
+    {% for tab in sorted_tabs %}
+      {% assign tab_name = tab.url | split: '/' | last %}
+      {% assign tab_title = site.data.locales[lang].tabs[tab_name] | default: tab.title %}
+
+      <a href="{{ tab.url | relative_url }}" class="landing-card" style="--i: {{ forloop.index0 }};">
+        <div class="landing-card-icon">
+          <i class="{{ tab.icon }}"></i>
+        </div>
+        <h2 class="landing-card-title">{{ tab_title }}</h2>
+        {% if tab.description %}
+          <p class="landing-card-desc">{{ tab.description }}</p>
+        {% endif %}
+        <span class="landing-card-arrow"><i class="fas fa-arrow-right"></i></span>
+      </a>
+    {% endfor %}
+  </div>
+</div>

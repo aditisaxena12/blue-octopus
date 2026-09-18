@@ -1,0 +1,23 @@
+---
+layout: page
+# Renders assets/resume.pdf inline, with a fallback download link.
+---
+
+{% include lang.html %}
+
+{% assign resume_path = page.pdf | default: '/assets/resume.pdf' %}
+
+<div id="resume">
+  <a href="{{ resume_path | relative_url }}" class="btn btn-outline-primary mb-3" download>
+    <i class="fas fa-download me-1"></i> Download PDF
+  </a>
+
+  <div class="resume-viewer">
+    <object data="{{ resume_path | relative_url }}" type="application/pdf">
+      <p class="text-muted">
+        Your browser can't display the PDF inline.
+        <a href="{{ resume_path | relative_url }}">Download it here</a> instead.
+      </p>
+    </object>
+  </div>
+</div>

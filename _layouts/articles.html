@@ -1,0 +1,96 @@
+---
+layout: page
+# All blog posts, as cards with a thumbnail, title and tags.
+# Includes a client-side filter by category (no separate route needed).
+---
+
+{% include lang.html %}
+
+{% assign sorted_categories = site.categories | sort %}
+
+{% if sorted_categories.size > 0 %}
+  <div id="article-filters" class="d-flex flex-wrap mb-4">
+    <button type="button" class="article-filter active" data-filter="all">All</button>
+    {% for category in sorted_categories %}
+      {% assign category_name = category | first %}
+      <button type="button" class="article-filter" data-filter="{{ category_name | slugify }}">
+        {{ category_name }}
+      </button>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div id="article-list" class="row row-cols-1 row-cols-md-2 g-4">
+  {% assign posts = site.posts | where_exp: 'item', 'item.hidden != true' %}
+
+  {% for post in posts %}
+    {% assign post_categories = '' %}
+    {% for category in post.categories %}
+      {% assign post_categories = post_categories | append: category | slugify | append: ' ' %}
+    {% endfor %}
+
+    <div class="col article-card-wrapper" data-categories="{{ post_categories | strip }}">
+      <a href="{{ post.url | relative_url }}" class="article-card card h-100 text-decoration-none">
+        <div class="article-card-thumb">
+          {% if post.image %}
+            {% assign src = post.image.path | default: post.image %}
+            {% unless src contains '//' %}
+              {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
+            {% endunless %}
+            {% assign alt = post.image.alt | xml_escape | default: post.title %}
+            <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
+          {% else %}
+            <div class="article-card-thumb-fallback">
+              <i class="far fa-file-alt"></i>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="card-body d-flex flex-column">
+          <h2 class="article-card-title h5">{{ post.title }}</h2>
+
+          <p class="article-card-desc text-muted flex-grow-1">
+            {% include post-description.html %}
+          </p>
+
+          <div class="article-card-meta text-muted small mb-2">
+            <i class="far fa-calendar fa-fw me-1"></i>
+            {% include datetime.html date=post.date lang=lang %}
+          </div>
+
+          {% if post.tags.size > 0 %}
+            <div class="article-card-tags">
+              {% for tag in post.tags %}
+                <span class="article-tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+  {% else %}
+    <p class="text-muted">No articles published yet — check back soon.</p>
+  {% endfor %}
+</div>
+
+<script>
+  (function () {
+    var filters = document.querySelectorAll('#article-filters .article-filter');
+    var cards = document.querySelectorAll('#article-list .article-card-wrapper');
+
+    filters.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        filters.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        var filter = btn.getAttribute('data-filter');
+
+        cards.forEach(function (card) {
+          var cats = (card.getAttribute('data-categories') || '').split(' ');
+          var show = filter === 'all' || cats.indexOf(filter) !== -1;
+          card.hidden = !show;
+        });
+      });
+    });
+  })();
+</script>
