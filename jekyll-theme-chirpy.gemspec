@@ -1,26 +1,20 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
+  # NOTE: this name must keep matching `theme: jekyll-theme-chirpy` in _config.yml,
+  # since this repo is a personalized fork of the Chirpy theme's own source rather
+  # than a site that depends on the theme as an external gem.
   spec.name          = "jekyll-theme-chirpy"
-  spec.version       = "7.2.4"
-  spec.authors       = ["Cotes Chung"]
-  spec.email         = ["cotes.chung@gmail.com"]
+  spec.version       = "1.0.0"
+  spec.authors       = ["Aditi Saxena"]
+  spec.email         = ["saxenaaditi@outlook.com"]
 
-  spec.summary       = "A minimal, responsive, and feature-rich Jekyll theme for technical writing."
-  spec.homepage      = "https://github.com/cotes2020/jekyll-theme-chirpy"
+  spec.summary       = "Aditi Saxena's personal blog, based on the Chirpy Jekyll theme."
+  spec.homepage      = "https://aditisaxena12.github.io"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").select { |f|
     f.match(%r!^((_(includes|layouts|sass|(data\/(locales|origin)))|assets)\/|README|LICENSE)!i)
-  }
-
-  spec.metadata = {
-    "bug_tracker_uri"   => "https://github.com/cotes2020/jekyll-theme-chirpy/issues",
-    "documentation_uri" => "https://github.com/cotes2020/jekyll-theme-chirpy/#readme",
-    "homepage_uri"      => "https://cotes2020.github.io/chirpy-demo",
-    "source_code_uri"   => "https://github.com/cotes2020/jekyll-theme-chirpy",
-    "wiki_uri"          => "https://github.com/cotes2020/jekyll-theme-chirpy/wiki",
-    "plugin_type"       => "theme"
   }
 
   spec.required_ruby_version = "~> 3.1"
