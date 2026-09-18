@@ -2,7 +2,7 @@
 title: About Me
 layout: page
 icon: fas fa-light fa-image-portrait
-order: 5
+order: 6
 description: Who I am and what I work on.
 ---
 

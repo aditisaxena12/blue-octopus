@@ -233,6 +233,33 @@
 }
 
 /* ---------------------------------------------------------------------- */
+/* Projects page                                                          */
+/* ---------------------------------------------------------------------- */
+
+.project-card {
+  border: 1px solid var(--main-border-color);
+  border-radius: 0.75rem;
+  background: var(--card-bg);
+  color: var(--text-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  }
+
+  .project-card-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .project-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
 /* Resume page                                                            */
 /* ---------------------------------------------------------------------- */
 

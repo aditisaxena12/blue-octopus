@@ -1,0 +1,11 @@
+# List of projects shown on the Projects tab.
+# - name:        project name
+#   description: one or two sentences
+#   github:       full URL to the GitHub repo (required)
+#   homepage:     optional live demo / docs URL
+#   tags:         optional list of short labels
+
+- name: Blue Octopus
+  description: This blog — a personal Jekyll site built on the Chirpy theme.
+  github: https://github.com/aditisaxena12/blue-octopus
+  tags: [jekyll, ruby]
