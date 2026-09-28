@@ -147,7 +147,7 @@ script_includes:
         {% for tag in page.tags %}
           <a
             href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
-            class="post-tag no-text-decoration"
+            class="post-tag tag-color-{{ forloop.index0 | modulo: 6 }} no-text-decoration"
           >
             {{- tag -}}
           </a>

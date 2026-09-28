@@ -30,7 +30,7 @@ layout: page
     {% endfor %}
 
     <div class="col article-card-wrapper" data-categories="{{ post_categories | strip }}">
-      <a href="{{ post.url | relative_url }}" class="article-card card h-100 text-decoration-none">
+      <a href="{{ post.url | relative_url }}" class="article-card tilt-card card h-100 text-decoration-none">
         <div class="article-card-thumb">
           {% if post.image %}
             {% assign src = post.image.path | default: post.image %}
@@ -40,8 +40,10 @@ layout: page
             {% assign alt = post.image.alt | xml_escape | default: post.title %}
             <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
           {% else %}
-            <div class="article-card-thumb-fallback">
-              <i class="far fa-file-alt"></i>
+            {% assign thumb_variant = post.title | size | modulo: 6 %}
+            {% assign thumb_icons = 'fas fa-feather-alt,fas fa-lightbulb,fas fa-star,fas fa-compass,fas fa-seedling,fas fa-bolt' | split: ',' %}
+            <div class="article-card-thumb-fallback thumb-gradient-{{ thumb_variant }}">
+              <i class="{{ thumb_icons[thumb_variant] }}"></i>
             </div>
           {% endif %}
         </div>
@@ -61,7 +63,7 @@ layout: page
           {% if post.tags.size > 0 %}
             <div class="article-card-tags">
               {% for tag in post.tags %}
-                <span class="article-tag">{{ tag }}</span>
+                <span class="article-tag tag-color-{{ forloop.index0 | modulo: 6 }}">{{ tag }}</span>
               {% endfor %}
             </div>
           {% endif %}
@@ -94,3 +96,5 @@ layout: page
     });
   })();
 </script>
+
+{% include tilt-cards.html %}
