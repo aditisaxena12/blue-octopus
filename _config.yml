@@ -77,8 +77,12 @@ analytics:
     id: # fill in your Fathom Site ID
 
 # Page views settings
+# To enable: sign up free at https://www.goatcounter.com (2 min, no card),
+# create a site, then paste its code (the part before ".goatcounter.com")
+# into analytics.goatcounter.id above. Until that id is set, view counts
+# stay hidden — this line alone doesn't turn anything on.
 pageviews:
-  provider: # now only supports 'goatcounter'
+  provider: goatcounter
 
 # Prefer color scheme setting.
 #
@@ -112,6 +116,18 @@ toc: true
 
 comments:
   # Global switch for the post-comment system. Keeping it empty means disabled.
+  #
+  # For comments + per-post reactions (👍 🎉 ❤️ 🚀 ...), use giscus — it's
+  # free and backed by GitHub Discussions on this repo. Setup (~5 min):
+  #   1. Settings > General > Features > enable "Discussions" on this repo.
+  #   2. Install the giscus app: https://github.com/apps/giscus (grant it
+  #      access to aditisaxena12/blue-octopus).
+  #   3. Go to https://giscus.app, fill in this repo, pick a Discussion
+  #      category (e.g. "Announcements" or a new "Comments" one), and copy
+  #      the repo_id/category_id values it generates into giscus: below.
+  #   4. Set provider: giscus below.
+  # Until repo_id/category_id are filled in, leave provider blank — an
+  # enabled giscus with empty ids renders a broken widget on every post.
   provider: # [disqus | utterances | giscus]
   # The provider options are as follows:
   disqus:
@@ -122,14 +138,15 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
+    repo: aditisaxena12/blue-octopus
+    repo_id: # paste from giscus.app after step 3 above
+    category: # paste from giscus.app after step 3 above
+    category_id: # paste from giscus.app after step 3 above
     mapping: # optional, default to 'pathname'
     strict: # optional, default to '0'
     input_position: # optional, default to 'bottom'
     lang: # optional, default to the value of `site.lang`
+    reactions_enabled: "1" # keep reactions on (this is the "reactions" feature)
     reactions_enabled: # optional, default to the value of `1`
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets

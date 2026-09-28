@@ -1,0 +1,26 @@
+<!-- LinkedIn-style vertical timeline, driven by _data/journey.yml -->
+{% if site.data.journey.size > 0 %}
+  <div id="journey">
+    <h2 class="journey-heading">My Journey</h2>
+
+    <div class="journey-timeline">
+      {% for entry in site.data.journey %}
+        <div class="journey-item">
+          <div class="journey-dot">
+            <i class="{{ entry.icon | default: 'fas fa-circle' }}"></i>
+          </div>
+          <div class="journey-card">
+            <div class="journey-period">{{ entry.period }}</div>
+            <h3 class="journey-title">{{ entry.title }}</h3>
+            {% if entry.org %}
+              <div class="journey-org">{{ entry.org }}</div>
+            {% endif %}
+            {% if entry.description %}
+              <p class="journey-desc">{{ entry.description }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

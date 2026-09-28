@@ -12,3 +12,5 @@ open questions in my field, and I write here to document what I'm learning
 and thinking about along the way.
 
 <!-- Replace the paragraph above with your own — this is a starting draft. -->
+
+{% include journey.html %}

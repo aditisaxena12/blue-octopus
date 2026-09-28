@@ -1,0 +1,25 @@
+# Timeline shown in the "My Journey" section on the About page.
+# Newest first. Each entry:
+#   title:  role / milestone
+#   org:    company, school, or project
+#   period: e.g. "2024 — Present" or "2022"
+#   description: one or two sentences
+#   icon:   optional Font Awesome class (defaults to a dot)
+
+- title: Research Scholar & Software Engineer
+  org: Update me
+  period: Present
+  description: Replace this with what you're currently doing.
+  icon: fas fa-flask
+
+- title: Update me
+  org: Update me
+  period: Update me
+  description: Add your previous role, degree, or milestone here.
+  icon: fas fa-graduation-cap
+
+- title: Where it started
+  org: Update me
+  period: Update me
+  description: The first entry in your journey — add as many as you like.
+  icon: fas fa-seedling
