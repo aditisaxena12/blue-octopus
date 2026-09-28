@@ -1,7 +1,7 @@
 ---
 title: About Me
 layout: page
-icon: fas fa-light fa-image-portrait
+icon: fas fa-user-astronaut
 order: 6
 description: Who I am and what I work on.
 ---

@@ -59,6 +59,25 @@ html[data-mode='dark'] {
 }
 
 /* ---------------------------------------------------------------------- */
+/* Colorful nav icons (sidebar tabs + landing hub cards)                  */
+/* ---------------------------------------------------------------------- */
+
+@for $i from 0 through 5 {
+  .nav-icon-color-#{$i} {
+    color: var(--accent-#{$i}) !important;
+  }
+}
+
+.nav-link .nav-icon {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.2) rotate(-8deg);
+}
+
+/* ---------------------------------------------------------------------- */
 /* Dark/light mode icon morph                                             */
 /* ---------------------------------------------------------------------- */
 
@@ -330,8 +349,12 @@ html[data-mode='dark'] {
 
     .landing-card-icon {
       font-size: 1.5rem;
-      color: var(--link-color);
       margin-bottom: 0.75rem;
+      transition: transform 0.25s ease;
+    }
+
+    .landing-card:hover .landing-card-icon {
+      transform: scale(1.15) rotate(-6deg);
     }
 
     .landing-card-title {

@@ -21,7 +21,7 @@ layout: default
       {% assign tab_title = site.data.locales[lang].tabs[tab_name] | default: tab.title %}
 
       <a href="{{ tab.url | relative_url }}" class="landing-card" style="--i: {{ forloop.index0 }};">
-        <div class="landing-card-icon">
+        <div class="landing-card-icon nav-icon-color-{{ tab.order | modulo: 6 }}">
           <i class="{{ tab.icon }}"></i>
         </div>
         <h2 class="landing-card-title">{{ tab_title }}</h2>

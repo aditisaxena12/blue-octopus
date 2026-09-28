@@ -1,7 +1,7 @@
 ---
 title: Resume
 layout: resume
-icon: fas fa-file-pdf
+icon: fas fa-id-card
 order: 5
 description: My background, at a glance.
 ---
