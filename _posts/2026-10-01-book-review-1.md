@@ -1,8 +1,8 @@
 ---
-title: Welcome to the Blog
-date: 2026-09-18 10:00:00 +0000
-categories: [Research]
-tags: [intro]
+title: Book Review 1
+date: 2026-10-01 10:00:00 +0000
+categories: [Book Reviews]
+tags: [fiction]
 image:
   path: /assets/img/placeholder.png
   alt: Placeholder thumbnail

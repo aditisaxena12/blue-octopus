@@ -33,10 +33,9 @@ layout: page
       <a href="{{ post.url | relative_url }}" class="article-card tilt-card card h-100 text-decoration-none">
         <div class="article-card-thumb">
           {% if post.image %}
-            {% assign src = post.image.path | default: post.image %}
-            {% unless src contains '//' %}
-              {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-            {% endunless %}
+            {% assign raw_src = post.image.path | default: post.image %}
+            {% capture src %}{% include media-url.html src=raw_src subpath=post.media_subpath %}{% endcapture %}
+            {% assign src = src | strip %}
             {% assign alt = post.image.alt | xml_escape | default: post.title %}
             <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
           {% else %}
