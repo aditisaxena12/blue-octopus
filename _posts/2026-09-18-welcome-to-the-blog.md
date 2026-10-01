@@ -20,4 +20,4 @@ image:
 
 This is where your first real post goes. Front matter above controls the
 title, date, category/tag filtering, and the thumbnail shown on the
-[Articles](/articles/) page.
+[Articles]({{ site.baseurl }}/articles/) page.
