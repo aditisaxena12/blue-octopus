@@ -1,7 +1,7 @@
 <!-- LinkedIn-style vertical timeline, driven by _data/journey.yml -->
 {% if site.data.journey.size > 0 %}
   <div id="journey">
-    <h2 class="journey-heading">My Journey</h2>
+    <h2 class="journey-heading">My journey so far...</h2>
 
     <div class="journey-timeline">
       {% for entry in site.data.journey %}
@@ -11,9 +11,9 @@
           </div>
           <div class="journey-card">
             <div class="journey-period">{{ entry.period }}</div>
-            <h3 class="journey-title">{{ entry.title }}</h3>
+            <h3 class="journey-org">{{ entry.org }}</h3>
             {% if entry.org %}
-              <div class="journey-org">{{ entry.org }}</div>
+              <div class="journey-title">{{ entry.title }}</div>
             {% endif %}
             {% if entry.description %}
               <p class="journey-desc">{{ entry.description }}</p>

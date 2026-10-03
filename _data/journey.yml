@@ -6,20 +6,39 @@
 #   description: one or two sentences
 #   icon:   optional Font Awesome class (defaults to a dot)
 
-- title: Research Scholar & Software Engineer
-  org: Update me
-  period: Present
-  description: Replace this with what you're currently doing.
-  icon: fas fa-flask
+- title: Research Scholar 
+  org: Indian Institute of Science (IISc) Bangalore
+  period: 2024 - Present
+  description: >-
+    I traded deadlines for research questions and started my PhD at the
+    meeting point of neuroscience and AI. These days I'm figuring out how to
+    decode neural signals with deep reinforcement learning, without needing a
+    high-end GPU to do it, so that Brain-Computer Interfaces can one day be
+    lighter and more accessible. Still learning something new every week.
+- title: Software Development Engineer 
+  org: Microsoft Corporation, Hyderabad
+  period: 2022-2024
+  description: >-
+    My first real job, with the Surface devices team. I worked on web and
+    desktop apps and cloud services, and picked up a lot along the way: how
+    to work in a team, how to ship things people actually use, and that
+    asking questions early saves everyone time.
+  icon: fas fa-chart-line
 
-- title: Update me
-  org: Update me
-  period: Update me
-  description: Add your previous role, degree, or milestone here.
+- title: Bachelor of Technology (B.Tech) in Computer Science & Engineering
+  org: Indian Institute of Technology (IIT) Goa
+  period: 2018-2022
+  description: >-
+    Four years by the Goa coast that gave me my closest friends, a lot of
+    late-night coding, and my first real taste of computer science beyond
+    the textbook. I still miss the place. (CGPA 9.33/10)
   icon: fas fa-graduation-cap
 
-- title: Where it started
-  org: Update me
-  period: Update me
-  description: The first entry in your journey — add as many as you like.
-  icon: fas fa-seedling
+- title: Where it all started
+  org: City Montessori School, Lucknow
+  period: until 2018
+  description: >-
+    Where I fell in love with maths and computers, and survived two rounds of
+    nerve-wracking board exams with a lot of support from my teachers and
+    family. (ICSE 2016, ISC 2018 with PCM and Computer Science)
+  icon: fas fa-book
