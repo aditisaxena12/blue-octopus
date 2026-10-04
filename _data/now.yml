@@ -7,18 +7,18 @@
 updated: October 2026
 
 items:
-  - label: Researching
-    icon: fas fa-brain
-    text: Decoding neural signals with deep RL for lightweight Brain-Computer Interfaces.
-
   - label: Reading
     icon: fas fa-book-open
-    text: Add the book on your nightstand here.
+    text: The Fountainhead by Ayn Rand.
 
   - label: Listening to
     icon: fas fa-headphones
-    text: Add the song or album on repeat here.
+    text: Chan Kithan by Ali Sethi.
 
-  - label: Painting
+  - label: Binging
+    icon: fas fa-movie
+    text: Ted Lasso on Apple TV.
+
+  - label: Crafting
     icon: fas fa-palette
-    text: Add what's on your canvas here.
+    text: Tinkling with watercolors.
