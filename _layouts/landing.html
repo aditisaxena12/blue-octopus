@@ -1,35 +1,89 @@
 ---
 layout: default
-# Hub-style home page: hero + animated links to the rest of the site.
+# Hub-style home page: neuron-field hero with a local-time greeting,
+# clickable brain map, "Now" box, and latest posts.
 ---
 
 {% include lang.html %}
 
 <div id="landing">
-  <section class="landing-hero">
-    <h1 class="landing-hero-title">
-      Hi, I'm {{ site.social.name | default: site.title }} <span class="wave">👋</span>
-    </h1>
-    <p class="landing-hero-tagline">{{ site.tagline }}</p>
+  <section class="landing-hero" id="landing-hero">
+    {%- comment -%}
+      Inline positioning on purpose: if the canvas ever took part in layout
+      (e.g. a stale stylesheet), sizing it to the hero would grow the hero,
+      which would grow the canvas again, without end.
+    {%- endcomment %}
+    <canvas
+      class="neuron-field"
+      aria-hidden="true"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"
+    ></canvas>
+    <div class="landing-hero-content">
+      {% assign greet = site.data.greetings %}
+      {% if greet.slots %}
+        <p class="landing-hero-clock" hidden>
+          <i class="far fa-clock"></i> <span class="landing-hero-time"></span> in {{ greet.city }}
+        </p>
+      {% endif %}
+      <h1 class="landing-hero-title">{{ page.hero_title }}</h1>
+      {% if page.hero_subtitle %}
+        <p class="landing-hero-tagline">{{ page.hero_subtitle }}</p>
+      {% endif %}    </div>
   </section>
 
-  <div class="landing-grid">
-    {% assign sorted_tabs = site.tabs | sort: 'order' %}
+  <section class="landing-section" style="--i: 1;">
+    <div class="landing-section-header">
+      <h2 class="landing-section-title">Explore my brain</h2>
+    </div>
 
-    {% for tab in sorted_tabs %}
-      {% assign tab_name = tab.url | split: '/' | last %}
-      {% assign tab_title = site.data.locales[lang].tabs[tab_name] | default: tab.title %}
+    {% include brain-map.html %}
+  </section>
 
-      <a href="{{ tab.url | relative_url }}" class="landing-card" style="--i: {{ forloop.index0 }};">
-        <div class="landing-card-icon nav-icon-color-{{ tab.order | modulo: 6 }}">
-          <i class="{{ tab.icon }}"></i>
-        </div>
-        <h2 class="landing-card-title">{{ tab_title }}</h2>
-        {% if tab.description %}
-          <p class="landing-card-desc">{{ tab.description }}</p>
+  {% if site.data.now.items.size > 0 %}
+    <section class="landing-section landing-now" style="--i: 2;">
+      <div class="landing-section-header">
+        <h2 class="landing-section-title">Right now</h2>
+        {% if site.data.now.updated %}
+          <span class="landing-section-meta">Last updated {{ site.data.now.updated }}</span>
         {% endif %}
-        <span class="landing-card-arrow"><i class="fas fa-arrow-right"></i></span>
-      </a>
-    {% endfor %}
-  </div>
+      </div>
+
+      <ul class="now-list">
+        {% for item in site.data.now.items %}
+          <li class="now-item">
+            <span class="now-icon nav-icon-color-{{ forloop.index0 | modulo: 6 }}">
+              <i class="{{ item.icon | default: 'fas fa-circle' }} fa-fw"></i>
+            </span>
+            <div>
+              <div class="now-label">{{ item.label }}</div>
+              <div class="now-text">{{ item.text }}</div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% assign latest_posts = site.posts | where_exp: 'item', 'item.hidden != true' %}
+  {% if latest_posts.size > 0 %}
+    <section class="landing-section" style="--i: 3;">
+      <div class="landing-section-header">
+        <h2 class="landing-section-title">Latest writing</h2>
+        <a class="landing-section-link" href="{{ '/articles/' | relative_url }}">
+          All articles <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="landing-posts">
+        {% for post in latest_posts limit: 3 %}
+          {% include article-card.html %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
 </div>
+
+{% include neuron-field.html %}
+{% include local-greeting.html %}
+{% include tilt-cards.html %}

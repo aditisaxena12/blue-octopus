@@ -1,0 +1,66 @@
+<!--
+  Swaps the landing hero headline for a line about what I'm probably doing
+  right now, based on the time in my time zone (see _data/greetings.yml).
+  Without JavaScript the page keeps the static `hero_title`.
+-->
+{% assign greet = site.data.greetings %}
+{% if greet.slots %}
+  <script>
+    (function () {
+      var config = {{ greet | jsonify }};
+      var hero = document.getElementById('landing-hero');
+      if (!hero || !window.Intl) return;
+
+      var title = hero.querySelector('.landing-hero-title');
+      var clock = hero.querySelector('.landing-hero-clock');
+      var timeEl = hero.querySelector('.landing-hero-time');
+
+      var partsFormat;
+      var timeFormat;
+      try {
+        partsFormat = new Intl.DateTimeFormat('en-US', {
+          timeZone: config.timezone, weekday: 'short', hour: 'numeric', hourCycle: 'h23'
+        });
+        timeFormat = new Intl.DateTimeFormat('en-US', {
+          timeZone: config.timezone, weekday: 'long', hour: 'numeric', minute: '2-digit'
+        });
+      } catch (e) {
+        return; /* unknown time zone: keep the static headline */
+      }
+
+      function pickSlot(day, hour) {
+        for (var i = 0; i < config.slots.length; i++) {
+          var slot = config.slots[i];
+          var dayOk = !slot.days || slot.days.indexOf(day) !== -1;
+          if (dayOk && hour >= slot.from && hour < slot.to) return slot;
+        }
+        return null;
+      }
+
+      function update() {
+        var now = new Date();
+        var day = '';
+        var hour = 0;
+        partsFormat.formatToParts(now).forEach(function (p) {
+          if (p.type === 'weekday') day = p.value;
+          if (p.type === 'hour') hour = parseInt(p.value, 10) % 24;
+        });
+
+        var slot = pickSlot(day, hour);
+        if (slot) title.textContent = slot.text;
+
+        if (clock && timeEl) {
+          timeEl.textContent = timeFormat.format(now)
+            .replace(/^(\w+)\s/, '$1, ')
+            .replace(/\s(AM|PM)/, function (m, ampm) {
+              return ' ' + ampm.toLowerCase();
+            });
+          clock.hidden = false;
+        }
+      }
+
+      update();
+      setInterval(update, 30000);
+    })();
+  </script>
+{% endif %}

@@ -30,44 +30,7 @@ layout: page
     {% endfor %}
 
     <div class="col article-card-wrapper" data-categories="{{ post_categories | strip }}">
-      <a href="{{ post.url | relative_url }}" class="article-card tilt-card card h-100 text-decoration-none">
-        <div class="article-card-thumb">
-          {% if post.image %}
-            {% assign raw_src = post.image.path | default: post.image %}
-            {% capture src %}{% include media-url.html src=raw_src subpath=post.media_subpath %}{% endcapture %}
-            {% assign src = src | strip %}
-            {% assign alt = post.image.alt | xml_escape | default: post.title %}
-            <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
-          {% else %}
-            {% assign thumb_variant = post.title | size | modulo: 6 %}
-            {% assign thumb_icons = 'fas fa-feather-alt,fas fa-lightbulb,fas fa-star,fas fa-compass,fas fa-seedling,fas fa-bolt' | split: ',' %}
-            <div class="article-card-thumb-fallback thumb-gradient-{{ thumb_variant }}">
-              <i class="{{ thumb_icons[thumb_variant] }}"></i>
-            </div>
-          {% endif %}
-        </div>
-
-        <div class="card-body d-flex flex-column">
-          <h2 class="article-card-title h5">{{ post.title }}</h2>
-
-          <p class="article-card-desc text-muted flex-grow-1">
-            {% include post-description.html %}
-          </p>
-
-          <div class="article-card-meta text-muted small mb-2">
-            <i class="far fa-calendar fa-fw me-1"></i>
-            {% include datetime.html date=post.date lang=lang %}
-          </div>
-
-          {% if post.tags.size > 0 %}
-            <div class="article-card-tags">
-              {% for tag in post.tags %}
-                <span class="article-tag tag-color-{{ forloop.index0 | modulo: 6 }}">{{ tag }}</span>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-      </a>
+      {% include article-card.html %}
     </div>
   {% else %}
     <p class="text-muted">No articles published yet — check back soon.</p>

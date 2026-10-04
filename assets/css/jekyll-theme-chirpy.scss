@@ -112,23 +112,23 @@ html[data-mode='dark'] {
   }
 }
 
-.mode-icon-sun {
+.mode-icon-moon {
   opacity: 1;
   transform: rotate(0deg) scale(1);
 }
 
-.mode-icon-moon {
+.mode-icon-sun {
   opacity: 0;
   transform: rotate(-90deg) scale(0.5);
 }
 
 html[data-mode='dark'] {
-  .mode-icon-sun {
+  .mode-icon-moon {
     opacity: 0;
     transform: rotate(90deg) scale(0.5);
   }
 
-  .mode-icon-moon {
+  .mode-icon-sun {
     opacity: 1;
     transform: rotate(0deg) scale(1);
   }
@@ -136,12 +136,12 @@ html[data-mode='dark'] {
 
 @media (prefers-color-scheme: dark) {
   html:not([data-mode='light']) {
-    .mode-icon-sun {
+    .mode-icon-moon {
       opacity: 0;
       transform: rotate(90deg) scale(0.5);
     }
 
-    .mode-icon-moon {
+    .mode-icon-sun {
       opacity: 1;
       transform: rotate(0deg) scale(1);
     }
@@ -292,10 +292,27 @@ html[data-mode='dark'] {
     position: relative;
     text-align: center;
     margin-bottom: 2.5rem;
-    padding: 3rem 1.5rem 2.5rem;
+    padding: 4.5rem 1.5rem 4rem;
     border-radius: 1rem;
     overflow: hidden;
+    isolation: isolate;
     animation: landing-fade-up 0.6s ease both;
+
+    .neuron-field {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      /* Fade the network behind the heading so the text stays readable */
+      mask-image: radial-gradient(ellipse 42% 38% at 50% 50%, rgba(0, 0, 0, 0.15), #000 100%);
+    }
+
+    .landing-hero-content {
+      position: relative;
+      z-index: 1;
+    }
 
     &::before {
       content: '';
@@ -313,15 +330,10 @@ html[data-mode='dark'] {
     }
 
     .landing-hero-title {
-      font-size: 2.1rem;
+      font-size: clamp(1.5rem, 4vw, 2rem);
       font-weight: 700;
-      margin-bottom: 0.5rem;
-
-      .wave {
-        display: inline-block;
-        animation: landing-wave 2.2s ease-in-out infinite;
-        transform-origin: 70% 70%;
-      }
+      max-width: 32rem;
+      margin: 0 auto 0.75rem;
     }
 
     .landing-hero-tagline {
@@ -331,90 +343,209 @@ html[data-mode='dark'] {
       margin: 0 auto;
       max-width: 36rem;
     }
+
+    .landing-hero-clock {
+      margin: 0 0 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
   }
 
-  .landing-grid {
+  .landing-section {
+    margin-top: 2.5rem;
+    animation: landing-fade-up 0.6s ease both;
+    animation-delay: calc(var(--i, 0) * 120ms);
+  }
+
+  .landing-section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .landing-section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .landing-section-meta {
+    font-size: 0.85rem;
+    opacity: 0.6;
+  }
+
+  .landing-section-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    i {
+      font-size: 0.8em;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover i {
+      transform: translateX(3px);
+    }
+  }
+
+  /* Own grid rather than Bootstrap's row-cols-*: the production CSS bundle
+     only keeps the Bootstrap classes the theme itself uses. */
+  .landing-posts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 1.5rem;
   }
 
-  .landing-card {
-    position: relative;
-    display: block;
+  /* "Right now" box */
+  .landing-now {
     padding: 1.5rem;
     border-radius: 0.75rem;
     background: var(--card-bg);
     border: 1px solid var(--main-border-color);
-    text-decoration: none;
-    color: var(--text-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    animation: landing-fade-up 0.6s ease both;
-    animation-delay: calc(var(--i, 0) * 80ms);
+  }
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
-      border-color: var(--link-color);
+  .now-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.25rem 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-      .landing-card-arrow {
-        transform: translateX(4px);
-        opacity: 1;
+  .now-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .now-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, currentcolor 14%, transparent);
+  }
+
+  .now-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .now-text {
+    font-size: 0.95rem;
+  }
+
+  /* Clickable brain map */
+  .brain-map {
+    max-width: 34rem;
+    margin: 0 auto;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .brain-stem {
+    fill: color-mix(in srgb, var(--text-color) 12%, var(--card-bg));
+    stroke: var(--text-color);
+    stroke-width: 2.5;
+    stroke-opacity: 0.55;
+  }
+
+  .brain-part {
+    cursor: pointer;
+    outline: none;
+
+    .brain-region {
+      fill: color-mix(in srgb, var(--region-color) 22%, var(--card-bg));
+      transition: fill 0.2s ease;
+    }
+
+    .brain-region-outlined {
+      stroke: var(--text-color);
+      stroke-width: 2.5;
+      stroke-opacity: 0.55;
+    }
+
+    .brain-label {
+      fill: var(--text-color);
+      font-size: 15px;
+      font-weight: 700;
+      text-anchor: middle;
+      pointer-events: none;
+      transition: fill 0.2s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      .brain-region {
+        fill: color-mix(in srgb, var(--region-color) 70%, var(--card-bg));
+      }
+
+      .brain-label {
+        fill: white;
       }
     }
+  }
 
-    .landing-card-icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-      transition: transform 0.25s ease;
+  .brain-folds path,
+  .brain-cerebellum-folds path,
+  .brain-outline {
+    fill: none;
+    stroke: var(--text-color);
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  .brain-folds path {
+    stroke-width: 2;
+    opacity: 0.35;
+
+    &.brain-gyrus {
+      stroke-width: 1.5;
+      opacity: 0.15;
     }
+  }
 
-    .landing-card:hover .landing-card-icon {
-      transform: scale(1.15) rotate(-6deg);
-    }
+  .brain-cerebellum-folds path {
+    stroke-width: 1.5;
+    opacity: 0.2;
+  }
 
-    .landing-card-title {
-      font-size: 1.1rem;
+  .brain-outline {
+    stroke-width: 2.5;
+    opacity: 0.55;
+  }
+
+  .brain-caption {
+    min-height: 3rem;
+    margin: 0.75rem auto 0;
+    max-width: 30rem;
+    text-align: center;
+    font-size: 0.95rem;
+
+    .brain-caption-section {
+      margin-left: 0.4rem;
       font-weight: 600;
-      margin-bottom: 0.35rem;
+      color: var(--link-color);
+      white-space: nowrap;
     }
-
-    .landing-card-desc {
-      font-size: 0.9rem;
-      opacity: 0.75;
-      margin-bottom: 0;
-    }
-
-    .landing-card-arrow {
-      position: absolute;
-      right: 1.25rem;
-      bottom: 1.25rem;
-      opacity: 0.4;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-  }
-}
-
-@keyframes landing-wave {
-  0%, 60%, 100% {
-    transform: rotate(0deg);
-  }
-
-  10%, 30% {
-    transform: rotate(14deg);
-  }
-
-  20% {
-    transform: rotate(-8deg);
-  }
-
-  40% {
-    transform: rotate(-4deg);
-  }
-
-  50% {
-    transform: rotate(10deg);
   }
 }
 

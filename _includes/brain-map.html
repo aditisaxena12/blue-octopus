@@ -1,0 +1,166 @@
+<!--
+  Clickable brain (side view, facing left). Regions come from _data/brain_map.yml;
+  their shapes live here. Cerebrum regions are rough polygons clipped to the
+  brain outline, so the lobes always tile neatly inside it.
+-->
+{% assign cerebrum = 'M 95 200 C 90 120 160 60 260 48 C 360 36 470 55 525 110 C 565 150 568 220 540 262 C 525 285 495 292 460 288 C 440 300 420 318 395 330 C 360 348 300 352 250 343 C 205 335 170 315 160 290 C 155 275 150 262 135 258 C 110 252 98 230 95 200 Z' %}
+{% assign cerebellum = 'M 418 312 C 440 290 505 292 545 262 C 572 285 566 340 515 356 C 470 370 425 352 418 312 Z' %}
+
+<div class="brain-map">
+  <svg viewBox="70 25 510 400" role="group" aria-label="Map of my brain: each region links to a part of this site">
+    <defs>
+      <clipPath id="brain-clip">
+        <path d="{{ cerebrum }}" />
+      </clipPath>
+    </defs>
+
+    <!-- Brainstem, tucked behind everything -->
+    <path class="brain-stem" d="M 378 318 C 386 352 390 384 392 416 L 428 416 C 426 386 428 354 432 322 Z" />
+
+    {%- comment -%} Cerebellum first, so the cerebrum overlaps it {%- endcomment -%}
+    {% assign back = site.data.brain_map | where: 'id', 'cerebellum' %}
+    {% assign front = site.data.brain_map | where_exp: 'r', "r.id != 'cerebellum'" %}
+    {% assign ordered = back | concat: front %}
+
+    {% for region in ordered %}
+      {% assign shape = nil %}
+      {% assign clipped = true %}
+      {% assign transform = '' %}
+      {% assign color = 1 %}
+
+      {% case region.id %}
+        {% when 'frontal' %}
+          {% assign shape = 'M 0 0 L 255 0 C 235 70 240 130 215 195 C 190 188 150 185 125 195 L 110 262 L 0 300 Z' %}
+          {% assign lx = 170 %}{% assign ly = 145 %}
+        {% when 'motor' %}
+          {% assign shape = 'M 255 0 L 305 0 C 285 80 290 160 262 228 C 245 231 225 236 205 240 C 208 225 211 210 215 195 C 240 130 235 70 255 0 Z' %}
+          {% assign lx = 260 %}{% assign ly = 120 %}
+          {% capture transform %}rotate(-77 {{ lx }} {{ ly }}){% endcapture %}
+        {% when 'broca' %}
+          {% assign shape = 'M 125 195 C 150 185 190 188 215 195 C 211 210 208 225 205 240 C 175 246 140 255 110 262 Z' %}
+          {% assign lx = 163 %}{% assign ly = 226 %}
+        {% when 'parietal' %}
+          {% assign shape = 'M 305 0 L 460 0 C 440 80 445 150 420 205 C 370 200 320 214 262 228 C 290 160 285 80 305 0 Z' %}
+          {% assign lx = 370 %}{% assign ly = 120 %}
+        {% when 'occipital' %}
+          {% assign shape = 'M 460 0 L 600 0 L 600 420 L 430 420 C 440 350 425 280 420 205 C 445 150 440 80 460 0 Z' %}
+          {% assign lx = 488 %}{% assign ly = 195 %}
+        {% when 'temporal' %}
+          {% assign shape = 'M 0 300 L 110 262 C 140 255 175 246 205 240 C 225 236 245 231 262 228 C 320 214 370 200 420 205 C 425 280 440 350 430 420 L 0 420 Z' %}
+          {% assign lx = 305 %}{% assign ly = 290 %}
+        {% when 'cerebellum' %}
+          {% assign shape = cerebellum %}
+          {% assign clipped = false %}
+          {% assign lx = 492 %}{% assign ly = 325 %}
+      {% endcase %}
+
+      {% unless shape %}{% continue %}{% endunless %}
+
+      {% assign tab = nil %}
+      {% if region.tab %}
+        {% assign tab = site.tabs | where: 'url', region.tab | first %}
+      {% endif %}
+
+      {% assign label = region.label %}
+      {% if tab %}
+        {% assign tab_name = tab.url | split: '/' | last %}
+        {% assign tab_title = site.data.locales[lang].tabs[tab_name] | default: tab.title %}
+        {% assign color = tab.order | modulo: 6 %}
+        {% assign label = label | default: tab_title %}
+      {% endif %}
+
+      {% capture region_shape %}
+        <path class="brain-region{% unless clipped %} brain-region-outlined{% endunless %}" d="{{ shape }}"{% if clipped %} clip-path="url(#brain-clip)"{% endif %} />
+        <text class="brain-label" x="{{ lx }}" y="{{ ly }}" transform="{{ transform }}" dominant-baseline="middle">{{ label }}</text>
+      {% endcapture %}
+
+      {% if tab %}
+        <a
+          href="{{ tab.url | relative_url }}"
+          class="brain-part"
+          style="--region-color: var(--accent-{{ color }});"
+          aria-label="{{ tab_title }} ({{ region.name }})"
+          data-name="{{ region.name }}"
+          data-blurb="{{ region.blurb | escape }}"
+          data-section="{{ tab_title }}"
+        >
+          {{ region_shape }}
+        </a>
+      {% else %}
+        <g
+          class="brain-part"
+          style="--region-color: var(--accent-{{ color }});"
+          tabindex="0"
+          data-name="{{ region.name }}"
+          data-blurb="{{ region.blurb | escape }}"
+        >
+          {{ region_shape }}
+        </g>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Folds and outlines, drawn on top -->
+    <g class="brain-folds" clip-path="url(#brain-clip)">
+      <path d="M 110 262 C 140 255 175 246 205 240 C 225 236 245 231 262 228 C 320 214 370 200 420 205" />
+      <path d="M 255 0 C 235 70 240 130 215 195 C 211 210 208 225 205 240" />
+      <path d="M 305 0 C 285 80 290 160 262 228" />
+      <path d="M 460 0 C 440 80 445 150 420 205 C 425 280 440 350 430 420" />
+      <path d="M 110 262 L 125 195 C 150 185 190 188 215 195" />
+      <path class="brain-gyrus" d="M 120 120 q 25 -20 45 5 t 40 0" />
+      <path class="brain-gyrus" d="M 110 175 q 30 -15 50 8 t 45 -5" />
+      <path class="brain-gyrus" d="M 175 90 q 20 15 40 -5" />
+      <path class="brain-gyrus" d="M 330 70 q 25 20 50 0 t 45 10" />
+      <path class="brain-gyrus" d="M 320 160 q 30 -20 55 5 t 30 -10" />
+      <path class="brain-gyrus" d="M 470 110 q 20 25 45 15" />
+      <path class="brain-gyrus" d="M 455 250 q 25 -20 55 -5" />
+      <path class="brain-gyrus" d="M 220 300 q 35 -20 70 0 t 70 -5" />
+    </g>
+    <g class="brain-cerebellum-folds">
+      <path d="M 440 330 q 55 -14 112 -20" />
+      <path d="M 448 346 q 50 -8 102 -16" />
+    </g>
+    <path class="brain-outline" d="{{ cerebrum }}" />
+  </svg>
+
+  <p class="brain-caption" aria-live="polite" data-default="Hover over a part of my brain to see what's inside. 🧠">
+    Hover over a part of my brain to see what's inside. 🧠
+  </p>
+</div>
+
+<script>
+  (function () {
+    var map = document.querySelector('.brain-map');
+    if (!map) return;
+
+    var caption = map.querySelector('.brain-caption');
+    var defaultText = caption.getAttribute('data-default');
+
+    function show(part) {
+      var section = part.getAttribute('data-section');
+      caption.textContent = '';
+
+      var name = document.createElement('strong');
+      name.textContent = part.getAttribute('data-name');
+      caption.appendChild(name);
+      caption.appendChild(document.createTextNode(': ' + part.getAttribute('data-blurb')));
+
+      if (section) {
+        var link = document.createElement('span');
+        link.className = 'brain-caption-section';
+        link.textContent = section + ' →';
+        caption.appendChild(link);
+      }
+    }
+
+    function reset() {
+      caption.textContent = defaultText;
+    }
+
+    map.querySelectorAll('.brain-part').forEach(function (part) {
+      part.addEventListener('mouseenter', function () { show(part); });
+      part.addEventListener('focus', function () { show(part); });
+      part.addEventListener('mouseleave', reset);
+      part.addEventListener('blur', reset);
+    });
+  })();
+</script>

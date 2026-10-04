@@ -1,0 +1,39 @@
+# Time-aware headline in the landing page hero.
+# The visitor sees what you're probably up to right now, in your time zone.
+# The first slot that matches wins, so put specific ones (like weekends) first.
+#   from / to: hour range in 24h time, `to` not included (e.g. 9 to 13 = 9:00–12:59)
+#   days:      optional; any of Mon Tue Wed Thu Fri Sat Sun
+#   text:      the headline
+
+timezone: Asia/Kolkata
+city: Bangalore
+
+slots:
+  - days: [Sat, Sun]
+    from: 7
+    to: 12
+    text: Weekend morning, so I'm probably finishing chores or struggling to get out of bed. 🛌
+
+  - from: 0
+    to: 5
+    text: I should be asleep, but there's always one more chapter to read. 🌙
+
+  - from: 5
+    to: 9
+    text: Coffee first, neurons later. ☕
+
+  - from: 9
+    to: 13
+    text: Probably in the lab, staring at another set of experiments. 🧠
+
+  - from: 13
+    to: 17
+    text: Fighting the post-lunch slump with code. 💻
+
+  - from: 17
+    to: 20
+    text: Good chance I'm painting, or chasing a football. 🎨
+
+  - from: 20
+    to: 24
+    text: Probably unwinding after a long day with chai and friends. ☕️

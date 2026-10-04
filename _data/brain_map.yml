@@ -1,0 +1,41 @@
+# Clickable brain on the landing page: each region links to a section.
+#   id:     which shape to use (fixed; drawn in _includes/brain-map.html)
+#   name:   the brain region
+#   tab:    URL of the section it opens (leave out for a region that isn't a link)
+#   label:  text written on the region (defaults to the section's title)
+#   blurb:  shown under the brain on hover
+
+- id: frontal
+  name: Frontal lobe
+  tab: /resume/
+  blurb: Planning and decision-making, so naturally that's where my career moves get plotted.
+
+- id: motor
+  name: Motor cortex
+  tab: /projects/
+  blurb: Turns thoughts into action. Here, that means the things I've built.
+
+- id: broca
+  name: Broca's area
+  tab: /articles/
+  blurb: Where language gets produced, a.k.a. where my posts come from.
+
+- id: parietal
+  name: Parietal lobe
+  tab: /tags/
+  blurb: Pulls scattered signals together and makes sense of them. Everything here, sorted by topic.
+
+- id: occipital
+  name: Occipital lobe
+  tab: /publications/
+  blurb: The visual cortex, for looking very closely at data. My papers live here.
+
+- id: temporal
+  name: Temporal lobe
+  tab: /about/
+  blurb: Home of the hippocampus, where memories are made. My story so far.
+
+- id: cerebellum
+  name: Cerebellum
+  label: ⚽
+  blurb: Balance and coordination. Mostly busy keeping me upright on the football pitch.

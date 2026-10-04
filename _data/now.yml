@@ -1,0 +1,24 @@
+# "Now" box on the landing page: what I'm up to at the moment.
+# Edit freely; `updated` is shown as "Last updated ...".
+#   label: short heading
+#   icon:  Font Awesome class
+#   text:  one line
+
+updated: October 2026
+
+items:
+  - label: Researching
+    icon: fas fa-brain
+    text: Decoding neural signals with deep RL for lightweight Brain-Computer Interfaces.
+
+  - label: Reading
+    icon: fas fa-book-open
+    text: Add the book on your nightstand here.
+
+  - label: Listening to
+    icon: fas fa-headphones
+    text: Add the song or album on repeat here.
+
+  - label: Painting
+    icon: fas fa-palette
+    text: Add what's on your canvas here.

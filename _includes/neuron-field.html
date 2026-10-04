@@ -1,0 +1,250 @@
+<!--
+  Animated "neuron field" behind the landing hero: drifting neurons that
+  spontaneously fire and pass pulses to their neighbours. Moving the pointer
+  over the hero excites nearby neurons; clicking sends a burst.
+  Draws a still network for visitors who prefer reduced motion.
+-->
+<script>
+  (function () {
+    var hero = document.getElementById('landing-hero');
+    var canvas = hero && hero.querySelector('.neuron-field');
+    if (!canvas || !canvas.getContext) return;
+
+    var ctx = canvas.getContext('2d');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var LINK_DIST = 120; /* px; neurons closer than this are connected */
+    var REFRACTORY = 900; /* ms a neuron rests after firing */
+    var FIRE_GLOW = 600; /* ms a firing neuron stays lit */
+    var PULSE_SPEED = 0.18; /* px per ms */
+    var SPONTANEOUS_RATE = 0.00035; /* chance per neuron per ms */
+    var PASS_ON_CHANCE = 0.45; /* chance a pulse makes its target fire */
+    var POINTER_RADIUS = 70;
+
+    var width = 0;
+    var height = 0;
+    var neurons = [];
+    var pulses = [];
+    var colors = { base: '#888', accents: ['#ff6b6b'] };
+    var pointer = null;
+    var running = false;
+    var visible = true;
+    var lastTime = 0;
+
+    function readColors() {
+      var style = getComputedStyle(hero);
+      var accents = [];
+      for (var i = 0; i < 6; i++) {
+        var c = style.getPropertyValue('--accent-' + i).trim();
+        if (c) accents.push(c);
+      }
+      colors.base = style.getPropertyValue('--text-color').trim() || '#888';
+      colors.accents = accents.length ? accents : ['#ff6b6b'];
+    }
+
+    function resize() {
+      var rect = hero.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      /* Capped so a layout bug can never ask for an unallocatable canvas */
+      width = Math.min(rect.width, 3000);
+      height = Math.min(rect.height, 1500);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      var target = Math.max(14, Math.min(70, Math.round((width * height) / 9000)));
+      while (neurons.length < target) neurons.push(makeNeuron());
+      neurons.length = target;
+      neurons.forEach(function (n) {
+        n.x = Math.min(n.x, width);
+        n.y = Math.min(n.y, height);
+      });
+      pulses = pulses.filter(function (p) {
+        return neurons.indexOf(p.from) !== -1 && neurons.indexOf(p.to) !== -1;
+      });
+
+      if (!running) draw(performance.now());
+    }
+
+    function makeNeuron() {
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.012,
+        vy: (Math.random() - 0.5) * 0.012,
+        r: 1.6 + Math.random() * 1.6,
+        color: Math.floor(Math.random() * 6),
+        firedAt: -Infinity
+      };
+    }
+
+    function distance(a, b) {
+      var dx = a.x - b.x;
+      var dy = a.y - b.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function fire(n, now) {
+      if (now - n.firedAt < REFRACTORY) return;
+      n.firedAt = now;
+
+      neurons.forEach(function (m) {
+        if (m === n) return;
+        var d = distance(n, m);
+        if (d < LINK_DIST && Math.random() < 0.6) {
+          pulses.push({ from: n, to: m, start: now, duration: d / PULSE_SPEED, color: n.color });
+        }
+      });
+    }
+
+    function step(now, dt) {
+      neurons.forEach(function (n) {
+        n.x += n.vx * dt;
+        n.y += n.vy * dt;
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+
+        if (Math.random() < SPONTANEOUS_RATE * dt) fire(n, now);
+        if (pointer && distance(n, pointer) < POINTER_RADIUS) fire(n, now);
+      });
+
+      pulses = pulses.filter(function (p) {
+        if (now - p.start < p.duration) return true;
+        if (Math.random() < PASS_ON_CHANCE) fire(p.to, now);
+        return false;
+      });
+    }
+
+    function draw(now) {
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineWidth = 1;
+
+      /* Connections */
+      ctx.strokeStyle = colors.base;
+      for (var i = 0; i < neurons.length; i++) {
+        for (var j = i + 1; j < neurons.length; j++) {
+          var d = distance(neurons[i], neurons[j]);
+          if (d < LINK_DIST) {
+            ctx.globalAlpha = 0.14 * (1 - d / LINK_DIST);
+            ctx.beginPath();
+            ctx.moveTo(neurons[i].x, neurons[i].y);
+            ctx.lineTo(neurons[j].x, neurons[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      /* Pulses travelling along connections */
+      pulses.forEach(function (p) {
+        var t = Math.min(1, (now - p.start) / p.duration);
+        var x = p.from.x + (p.to.x - p.from.x) * t;
+        var y = p.from.y + (p.to.y - p.from.y) * t;
+        ctx.globalAlpha = 0.85;
+        ctx.fillStyle = colors.accents[p.color % colors.accents.length];
+        ctx.beginPath();
+        ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      /* Neurons, with a glow while firing */
+      neurons.forEach(function (n) {
+        var glow = Math.max(0, 1 - (now - n.firedAt) / FIRE_GLOW);
+        var accent = colors.accents[n.color % colors.accents.length];
+
+        if (glow > 0) {
+          ctx.globalAlpha = 0.25 * glow;
+          ctx.fillStyle = accent;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r + 9 * glow, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 0.3 + 0.7 * glow;
+        ctx.fillStyle = glow > 0 ? accent : colors.base;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + 1.2 * glow, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+    }
+
+    function frame(now) {
+      if (!running) return;
+      var dt = Math.min(50, now - lastTime);
+      lastTime = now;
+      step(now, dt);
+      draw(now);
+      requestAnimationFrame(frame);
+    }
+
+    function updateRunning() {
+      var shouldRun = !reduceMotion && visible && !document.hidden;
+      if (shouldRun && !running) {
+        running = true;
+        lastTime = performance.now();
+        requestAnimationFrame(frame);
+      } else if (!shouldRun) {
+        running = false;
+      }
+    }
+
+    function pointerPos(e) {
+      var rect = hero.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    readColors();
+    resize();
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(resize).observe(hero);
+    } else {
+      window.addEventListener('resize', resize);
+    }
+
+    /* Re-read colours when the light/dark mode changes */
+    new MutationObserver(function () {
+      readColors();
+      if (!running) draw(performance.now());
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+
+    if (window.matchMedia) {
+      var schemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      var onSchemeChange = function () {
+        readColors();
+        if (!running) draw(performance.now());
+      };
+      if (schemeQuery.addEventListener) schemeQuery.addEventListener('change', onSchemeChange);
+    }
+
+    if (reduceMotion) return;
+
+    hero.addEventListener('pointermove', function (e) {
+      pointer = pointerPos(e);
+    });
+    hero.addEventListener('pointerleave', function () {
+      pointer = null;
+    });
+    hero.addEventListener('click', function (e) {
+      var p = pointerPos(e);
+      var now = performance.now();
+      neurons.forEach(function (n) {
+        if (distance(n, p) < POINTER_RADIUS * 2) {
+          n.firedAt = -Infinity;
+          fire(n, now);
+        }
+      });
+    });
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        updateRunning();
+      }).observe(hero);
+    }
+    document.addEventListener('visibilitychange', updateRunning);
+
+    updateRunning();
+  })();
+</script>
