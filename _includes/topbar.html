@@ -47,6 +47,8 @@
     <div id="topbar-title">
       {% if page.layout == 'landing' %}
         {%- comment -%} No title on the landing page; the sidebar already says who this is {%- endcomment -%}
+      {% elsif page.layout == 'post' %}
+        {%- comment -%} No generic "Post" label on posts; the breadcrumb already shows the title {%- endcomment -%}
       {% elsif page.layout == 'home' %}
         {{- site.data.locales[include.lang].title | default: site.title -}}
       {% elsif page.collection == 'tabs' or page.layout == 'page' %}
